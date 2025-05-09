@@ -30,7 +30,6 @@ The dataset we are analyzing is
 library(ggplot2)  # visualization of data through graphs 
 library(tidyverse)  # i forgot
 library(janitor)  # tidy names
-install.packages("plotly")
 library(plotly)  # interactive plots
 ```
 
@@ -139,9 +138,7 @@ print(route_analysis)
 
 -   **Route Omission**
 
-    -   Since there are zero attempts for both Route 3 and Route 4, we
-        have ommitted these from the analysis because there is no activity. This
-        shows that these are not viable routes for expedition.
+    -   Since there are zero attempts for both Route 3 and Route 4, we have ommitted these from the analysis because there is no activity. This shows that these are not viable routes for expedition.
 
 ```{r}
 filtered_route_analysis <- route_analysis |>
