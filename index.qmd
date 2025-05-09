@@ -29,6 +29,7 @@ The dataset we are analyzing is
 ```{r}
 library(ggplot2) # visualization of data through graphs 
 library(tidyverse) # i forgot
+library(janitor)
 ```
 
 # Data preparation
@@ -46,6 +47,16 @@ The data used for this project was obtained through a github repo - the original
 
 3.3 Data importing and cleaning steps are explained in the text (tell me why you are doing the data cleaning activities that you perform) and follow a logical process.
 
+```{r}
+exped_tidy <- exped_tidy |> clean_names()
+peaks_tidy <- peaks_tidy |> clean_names()
+```
+
+```{r}
+summary(exped_tidy)
+summary(peaks_tidy)
+```
+
 3.4 Once your data is clean, show what the final data set looks like. However, do not print more than 20 rows of your data to the screen; rather, show me the data in a condensed form (i.e. using enhanced print for tibbles, head/tail commands, etc).
 
 3.5 Provide summary information about the variables of concern in your cleaned data set. provide me with a consolidated explanation, either with a table that provides summary info for each variable or a nicely written summary paragraph with inline code.
@@ -58,26 +69,26 @@ The data used for this project was obtained through a github repo - the original
 
 ```{r}
 annapuerna <- subset(exped_tidy,
-                     select = c(PEAKID, TOTMEMBERS, MDEATHS, NOHIRED),
-                     MDEATHS > 0 )
+                     select = c(peakid, totmembers, mdeaths, nohired),
+                     mdeaths > 0 )
 
-annapuerna <- annapuerna |> select (PEAKID, MDEATHS, TOTMEMBERS, NOHIRED) |>  mutate(rate = MDEATHS/TOTMEMBERS)
+annapuerna <- annapuerna |> select (peakid, mdeaths, totmembers, nohired) |>  mutate(rate = mdeaths/totmembers)
 
-ggplot(annapuerna, aes(x = PEAKID, y = rate, fill = NOHIRED)) +
+ggplot(annapuerna, aes(x = peakid, y = rate, fill = nohired)) +
   geom_col()
 ```
 
 Which mountain range (HIMAL_FACTOR) has the highest average peak height (HEIGHTM)?
 
 ```{r}
-slice_max(subset(peaks_tidy, select = c(HIMAL_FACTOR, HEIGHTM)), order_by = HEIGHTM)
+slice_max(subset(peaks_tidy, select = c(himal_factor, heightm)), order_by = heightm)
 ```
 
 The mountain ranges that most people climbed
 
 ```{r}
 
-ggplot(peaks_tidy, aes(x = HIMAL_FACTOR, fill = PSTATUS_FACTOR)) +
+ggplot(peaks_tidy, aes(x = himal_factor, fill = pstatus_factor)) +
   geom_bar(position = "dodge")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   labs(
@@ -85,4 +96,41 @@ ggplot(peaks_tidy, aes(x = HIMAL_FACTOR, fill = PSTATUS_FACTOR)) +
   theme(legend.position = "top", legend) +
   scale_fill_discrete(labels = c("Climbed", "Unclimbed"),
                     name = "Climbing status")
+```
+
+## Route Analysis
+
+```{r}
+
+route_attempts <- exped_tidy |>
+  summarise(
+    route1_attempts = sum(!is.na(route1)),
+    route2_attempts = sum(!is.na(route2)),
+    route3_attempts = sum(!is.na(route3)),
+    route4_attempts = sum(!is.na(route4))
+  )
+
+route_successes <- exped_tidy |>
+  summarise(
+    success1_successes = sum(success1, na.rm = TRUE),
+    success2_successes = sum(success2, na.rm = TRUE),
+    success3_successes = sum(success3, na.rm = TRUE),
+    success4_successes = sum(success4, na.rm = TRUE)
+  )
+
+attempts <- as.numeric(route_attempts)
+successes <- as.numeric(route_successes)
+
+
+```
+
+```{r}
+route_analysis <- tibble(
+  route = c("Route 1", "Route 2", "Route 3", "Route 4"),
+  attempts = attempts,
+  successes = successes
+) |>
+  mutate(success_rate = (successes / attempts) * 100)
+
+print(route_analysis)
 ```

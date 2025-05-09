@@ -167,7 +167,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#packages-required" id="toc-packages-required" class="nav-link" data-scroll-target="#packages-required">Packages required</a></li>
   <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data preparation</a></li>
-  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#route-analysis" id="toc-route-analysis" class="nav-link" data-scroll-target="#route-analysis">Route Analysis</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -202,12 +205,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
 </div>
 </section>
 <section id="data-preparation" class="level1">
 <h1>Data preparation</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>exped_tidy <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/exped_tidy.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>exped_tidy <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/exped_tidy.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 882 Columns: 69
 ── Column specification ────────────────────────────────────────────────────────
@@ -220,7 +232,7 @@ date  (3): BCDATE, SMTDATE, TERMDATE
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>peaks_tidy <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/peaks_tidy.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>peaks_tidy <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/peaks_tidy.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 480 Columns: 29
 ── Column specification ────────────────────────────────────────────────────────
@@ -237,48 +249,240 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 <p>The data used for this project was obtained through a github repo - the original dataset is from the <a href="https://www.himalayandatabase.com/index.html">Himalayan Database</a>. This database covers data from expedition archives of a well known journalist, Elizabeth Hawley.</p>
 <p>3.2 Source data is thoroughly explained (i.e.&nbsp;what was the original purpose of the data, when was it collected, how many variables did the original have, explain any peculiarities of the source data such as how missing values are recorded, etc).</p>
 <p>3.3 Data importing and cleaning steps are explained in the text (tell me why you are doing the data cleaning activities that you perform) and follow a logical process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>exped_tidy <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>peaks_tidy <span class="ot">&lt;-</span> peaks_tidy <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(exped_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    expid              peakid               year          season     
+ Length:882         Length:882         Min.   :2020   Min.   :1.000  
+ Class :character   Class :character   1st Qu.:2021   1st Qu.:1.000  
+ Mode  :character   Mode  :character   Median :2022   Median :1.000  
+                                       Mean   :2022   Mean   :1.971  
+                                       3rd Qu.:2023   3rd Qu.:3.000  
+                                       Max.   :2024   Max.   :4.000  
+                                                                     
+ season_factor           host       host_factor           route1         
+ Length:882         Min.   :1.000   Length:882         Length:882        
+ Class :character   1st Qu.:1.000   Class :character   Class :character  
+ Mode  :character   Median :1.000   Mode  :character   Mode  :character  
+                    Mean   :1.033                                        
+                    3rd Qu.:1.000                                        
+                    Max.   :3.000                                        
+                                                                         
+    route2           route3         route4           nation         
+ Length:882         Mode:logical   Mode:logical   Length:882        
+ Class :character   NA's:882       NA's:882       Class :character  
+ Mode  :character                                 Mode  :character  
+                                                                    
+                                                                    
+                                                                    
+                                                                    
+   leaders            sponsor           success1        success2      
+ Length:882         Length:882         Mode :logical   Mode :logical  
+ Class :character   Class :character   FALSE:258       FALSE:848      
+ Mode  :character   Mode  :character   TRUE :624       TRUE :34       
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+  success3        success4         ascent1            ascent2         
+ Mode :logical   Mode :logical   Length:882         Length:882        
+ FALSE:882       FALSE:882       Class :character   Class :character  
+                                 Mode  :character   Mode  :character  
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+ ascent3        ascent4         claimed         disputed      
+ Mode:logical   Mode:logical   Mode :logical   Mode :logical  
+ NA's:882       NA's:882       FALSE:882       FALSE:880      
+                                               TRUE :2        
+                                                              
+                                                              
+                                                              
+                                                              
+  countries           approach             bcdate          
+ Length:882         Length:882         Min.   :2020-04-23  
+ Class :character   Class :character   1st Qu.:2021-09-12  
+ Mode  :character   Mode  :character   Median :2022-04-21  
+                                       Mean   :2022-06-17  
+                                       3rd Qu.:2023-04-17  
+                                       Max.   :2024-06-09  
+                                       NA's   :473         
+    smtdate             smttime             smtdays          totdays      
+ Min.   :2020-05-26   Length:882         Min.   : 0.000   Min.   : 0.000  
+ 1st Qu.:2021-11-16   Class :character   1st Qu.: 0.000   1st Qu.: 0.000  
+ Median :2022-10-23   Mode  :character   Median : 0.000   Median : 0.000  
+ Mean   :2022-10-27                      Mean   : 8.025   Mean   : 8.999  
+ 3rd Qu.:2023-09-24                      3rd Qu.:13.000   3rd Qu.:16.750  
+ Max.   :2024-06-12                      Max.   :70.000   Max.   :76.000  
+ NA's   :87                                                               
+    termdate            termreason     termreason_factor    termnote        
+ Min.   :2020-05-31   Min.   : 0.000   Length:882         Length:882        
+ 1st Qu.:2021-10-01   1st Qu.: 1.000   Class :character   Class :character  
+ Median :2022-05-17   Median : 1.000   Mode  :character   Mode  :character  
+ Mean   :2022-06-30   Mean   : 2.221                                        
+ 3rd Qu.:2023-05-14   3rd Qu.: 2.000                                        
+ Max.   :2024-06-14   Max.   :14.000                                        
+ NA's   :544                                                                
+   highpoint     traverse          ski          parapente      
+ Min.   :   0   Mode :logical   Mode :logical   Mode :logical  
+ 1st Qu.:6715   FALSE:873       FALSE:861       FALSE:882      
+ Median :7176   TRUE :9         TRUE :21                       
+ Mean   :6979                                                  
+ 3rd Qu.:8516                                                  
+ Max.   :8849                                                  
+                                                               
+     camps             rope           totmembers       smtmembers    
+ Min.   : 0.000   Min.   :   0.00   Min.   : 0.000   Min.   : 0.000  
+ 1st Qu.: 2.000   1st Qu.:   0.00   1st Qu.: 3.000   1st Qu.: 0.000  
+ Median : 3.000   Median :   0.00   Median : 6.000   Median : 2.000  
+ Mean   : 2.522   Mean   :  19.44   Mean   : 8.193   Mean   : 3.804  
+ 3rd Qu.: 4.000   3rd Qu.:   0.00   3rd Qu.:11.000   3rd Qu.: 6.000  
+ Max.   :13.000   Max.   :5200.00   Max.   :37.000   Max.   :31.000  
+                                                                     
+    mdeaths           tothired         smthired         hdeaths       
+ Min.   :0.00000   Min.   : 0.000   Min.   : 0.000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.: 1.000   1st Qu.: 0.000   1st Qu.:0.00000  
+ Median :0.00000   Median : 5.000   Median : 2.000   Median :0.00000  
+ Mean   :0.04082   Mean   : 7.615   Mean   : 4.039   Mean   :0.01927  
+ 3rd Qu.:0.00000   3rd Qu.:10.000   3rd Qu.: 6.000   3rd Qu.:0.00000  
+ Max.   :4.00000   Max.   :58.000   Max.   :43.000   Max.   :3.00000  
+                                                                      
+  nohired          o2used          o2none         o2climb       
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:736       FALSE:473       FALSE:419       FALSE:476      
+ TRUE :146       TRUE :409       TRUE :463       TRUE :406      
+                                                                
+                                                                
+                                                                
+                                                                
+ o2descent        o2sleep        o2medical        o2taken       
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:871       FALSE:811       FALSE:874       FALSE:870      
+ TRUE :11        TRUE :71        TRUE :8         TRUE :12       
+                                                                
+                                                                
+                                                                
+                                                                
+  o2unkwn         othersmts          campsites           routememo     
+ Mode :logical   Length:882         Length:882         Min.   :  2195  
+ FALSE:878       Class :character   Class :character   1st Qu.: 84473  
+ TRUE :4         Mode  :character   Mode  :character   Median :165248  
+                                                       Mean   :146087  
+                                                       3rd Qu.:208643  
+                                                       Max.   :221852  
+                                                       NA's   :354     
+  accidents          achievment           agency            comrte       
+ Length:882         Length:882         Length:882         Mode :logical  
+ Class :character   Class :character   Class :character   FALSE:445      
+ Mode  :character   Mode  :character   Mode  :character   TRUE :437      
+                                                                         
+                                                                         
+                                                                         
+                                                                         
+   stdrte         primrte         primmem         primref       
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:414       FALSE:870       FALSE:882       FALSE:821      
+ TRUE :468       TRUE :12                        TRUE :61       
+                                                                
+                                                                
+                                                                
+                                                                
+    primid              chksum       
+ Length:882         Min.   :   2022  
+ Class :character   1st Qu.:2463313  
+ Mode  :character   Median :2464488  
+                    Mean   :2213338  
+                    3rd Qu.:2464616  
+                    Max.   :2466848  
+                                     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(peaks_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    peakid             pkname            pkname2            location        
+ Length:480         Length:480         Length:480         Length:480        
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+    heightm        heightf          himal       himal_factor      
+ Min.   :5407   Min.   :17740   Min.   : 1.00   Length:480        
+ 1st Qu.:6235   1st Qu.:20456   1st Qu.: 6.00   Class :character  
+ Median :6552   Median :21498   Median :11.00   Mode  :character  
+ Mean   :6649   Mean   :21814   Mean   :10.25                     
+ 3rd Qu.:6900   3rd Qu.:22640   3rd Qu.:15.00                     
+ Max.   :8849   Max.   :29032   Max.   :20.00                     
+                                                                  
+     region      region_factor         open          unlisted      
+ Min.   :1.000   Length:480         Mode :logical   Mode :logical  
+ 1st Qu.:2.000   Class :character   FALSE:95        FALSE:415      
+ Median :4.000   Mode  :character   TRUE :385       TRUE :65       
+ Mean   :3.802                                                     
+ 3rd Qu.:6.000                                                     
+ Max.   :7.000                                                     
+                                                                   
+  trekking          trekyear      restrict             phost      
+ Mode :logical   Min.   :  20   Length:480         Min.   :1.000  
+ FALSE:449       1st Qu.:1978   Class :character   1st Qu.:1.000  
+ TRUE :31        Median :1978   Mode  :character   Median :1.000  
+                 Mean   :1919                      Mean   :2.112  
+                 3rd Qu.:2002                      3rd Qu.:4.000  
+                 Max.   :2002                      Max.   :6.000  
+                 NA's   :451                                      
+ phost_factor          pstatus      pstatus_factor        peakmemo     
+ Length:480         Min.   :1.000   Length:480         Min.   :   8.0  
+ Class :character   1st Qu.:2.000   Class :character   1st Qu.: 472.5  
+ Mode  :character   Median :2.000   Mode  :character   Median : 865.0  
+                    Mean   :1.767                      Mean   : 791.3  
+                    3rd Qu.:2.000                      3rd Qu.:1115.0  
+                    Max.   :2.000                      Max.   :1377.0  
+                                                       NA's   :5       
+     pyear         pseason         pexpid            psmtdate        
+ Min.   :1909   Min.   :0.000   Length:480         Length:480        
+ 1st Qu.:1964   1st Qu.:1.000   Class :character   Class :character  
+ Median :1984   Median :1.000   Mode  :character   Mode  :character  
+ Mean   :1987   Mean   :1.581                                        
+ 3rd Qu.:2011   3rd Qu.:3.000                                        
+ Max.   :2024   Max.   :4.000                                        
+ NA's   :118                                                         
+   pcountry          psummiters          psmtnote           refermemo    
+ Length:480         Length:480         Length:480         Min.   : 25.0  
+ Class :character   Class :character   Class :character   1st Qu.:170.5  
+ Mode  :character   Mode  :character   Mode  :character   Median :304.0  
+                                                          Mean   :328.0  
+                                                          3rd Qu.:491.5  
+                                                          Max.   :701.0  
+                                                          NA's   :461    
+   photomemo    
+ Min.   : 13.0  
+ 1st Qu.:178.2  
+ Median :376.5  
+ Mean   :380.1  
+ 3rd Qu.:552.8  
+ Max.   :781.0  
+ NA's   :402    </code></pre>
+</div>
+</div>
 <p>3.4 Once your data is clean, show what the final data set looks like. However, do not print more than 20 rows of your data to the screen; rather, show me the data in a condensed form (i.e.&nbsp;using enhanced print for tibbles, head/tail commands, etc).</p>
 <p>3.5 Provide summary information about the variables of concern in your cleaned data set. provide me with a consolidated explanation, either with a table that provides summary info for each variable or a nicely written summary paragraph with inline code.</p>
 </section>
 <section id="exploratory-data-analysis" class="level1">
 <h1>Exploratory Data Analysis</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> <span class="fu">subset</span>(exped_tidy,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">select =</span> <span class="fu">c</span>(PEAKID, TOTMEMBERS, MDEATHS, NOHIRED),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                     MDEATHS <span class="sc">&gt;</span> <span class="dv">0</span> )</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> annapuerna <span class="sc">|&gt;</span> <span class="fu">select</span> (PEAKID, MDEATHS, TOTMEMBERS, NOHIRED) <span class="sc">|&gt;</span>  <span class="fu">mutate</span>(<span class="at">rate =</span> MDEATHS<span class="sc">/</span>TOTMEMBERS)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(annapuerna, <span class="fu">aes</span>(<span class="at">x =</span> PEAKID, <span class="at">y =</span> rate, <span class="at">fill =</span> NOHIRED)) <span class="sc">+</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Which mountain range (HIMAL_FACTOR) has the highest average peak height (HEIGHTM)?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">subset</span>(peaks_tidy, <span class="at">select =</span> <span class="fu">c</span>(HIMAL_FACTOR, HEIGHTM)), <span class="at">order_by =</span> HEIGHTM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 2
-  HIMAL_FACTOR HEIGHTM
-  &lt;chr&gt;          &lt;dbl&gt;
-1 Khumbu          8849</code></pre>
-</div>
-</div>
-<p>The mountain ranges that most people climbed</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> HIMAL_FACTOR, <span class="at">fill =</span> PSTATUS_FACTOR)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)<span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mountain range"</span>) <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, legend) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Climbed"</span>, <span class="st">"Unclimbed"</span>),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Climbing status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> <span class="fu">subset</span>(exped_tidy,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">select =</span> <span class="fu">c</span>(peakid, totmembers, mdeaths, nohired),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                     mdeaths <span class="sc">&gt;</span> <span class="dv">0</span> )</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> annapuerna <span class="sc">|&gt;</span> <span class="fu">select</span> (peakid, mdeaths, totmembers, nohired) <span class="sc">|&gt;</span>  <span class="fu">mutate</span>(<span class="at">rate =</span> mdeaths<span class="sc">/</span>totmembers)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(annapuerna, <span class="fu">aes</span>(<span class="at">x =</span> peakid, <span class="at">y =</span> rate, <span class="at">fill =</span> nohired)) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -287,8 +491,68 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 </div>
 </div>
 </div>
+<p>Which mountain range (HIMAL_FACTOR) has the highest average peak height (HEIGHTM)?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">subset</span>(peaks_tidy, <span class="at">select =</span> <span class="fu">c</span>(himal_factor, heightm)), <span class="at">order_by =</span> heightm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  himal_factor heightm
+  &lt;chr&gt;          &lt;dbl&gt;
+1 Khumbu          8849</code></pre>
+</div>
+</div>
+<p>The mountain ranges that most people climbed</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> himal_factor, <span class="at">fill =</span> pstatus_factor)) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)<span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mountain range"</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, legend) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Climbed"</span>, <span class="st">"Unclimbed"</span>),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Climbing status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="route-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="route-analysis">Route Analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>route_attempts <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">route1_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route1)),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">route2_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route2)),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">route3_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route3)),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">route4_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route4))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>route_successes <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">success1_successes =</span> <span class="fu">sum</span>(success1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">success2_successes =</span> <span class="fu">sum</span>(success2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">success3_successes =</span> <span class="fu">sum</span>(success3, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">success4_successes =</span> <span class="fu">sum</span>(success4, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>attempts <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(route_attempts)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>successes <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(route_successes)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>attempts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 862  43   0   0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>successes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 624  34   0   0</code></pre>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
