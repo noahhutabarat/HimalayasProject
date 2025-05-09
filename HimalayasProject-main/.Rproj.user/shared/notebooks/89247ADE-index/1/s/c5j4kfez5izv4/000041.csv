@@ -1,0 +1,8 @@
+"0","annapuerna <- subset(exped_tidy,"
+"0","                     select = c(PEAKID, TOTMEMBERS, MDEATHS, NOHIRED),"
+"0","                     MDEATHS > 0 )"
+"0",""
+"0","annapuerna <- annapuerna |> select (PEAKID, MDEATHS, TOTMEMBERS, NOHIRED) |>  mutate(rate = MDEATHS/TOTMEMBERS)"
+"0",""
+"0","ggplot(annapuerna, aes(x = PEAKID, y = rate, fill = NOHIRED)) +"
+"0","  geom_col()"

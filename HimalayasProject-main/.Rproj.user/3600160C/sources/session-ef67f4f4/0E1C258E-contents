@@ -1,0 +1,88 @@
+---
+title: "Himalayas Project"
+authors: "Noah Hutabarat and Harshini Ranjit" 
+affiliation: "University of Colorado Denver"
+format:
+  html:
+    theme: lux 
+    # see more themes https://quarto.org/docs/output-formats/html-themes.html
+page-layout: article
+editor: visual
+title-block-banner: true
+toc: true
+---
+
+# Introduction
+
+1.1 Provide an introduction that explains the problem statement you are addressing. Why should I be interested in this?
+
+The dataset we are analyzing is
+
+1.2 Provide a short explanation of how you plan to address this problem statement (the data used and the methodology employed)
+
+1.3 Discuss your current proposed approach/analytic technique you think will address (fully or partially) this problem.
+
+1.4 Explain how your analysis will help the consumer of your analysis
+
+# Packages required
+
+```{r}
+library(ggplot2) # visualization of data through graphs 
+library(tidyverse) # i forgot
+```
+
+# Data preparation
+
+```{r}
+exped_tidy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/exped_tidy.csv')
+peaks_tidy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/peaks_tidy.csv')
+```
+
+3.1 Original source where the data was obtained is cited and, if possible, hyperlinked.
+
+The data used for this project was obtained through a github repo - the original dataset is from the [Himalayan Database](https://www.himalayandatabase.com/index.html). This database covers data from expedition archives of a well known journalist, Elizabeth Hawley.
+
+3.2 Source data is thoroughly explained (i.e. what was the original purpose of the data, when was it collected, how many variables did the original have, explain any peculiarities of the source data such as how missing values are recorded, etc).
+
+3.3 Data importing and cleaning steps are explained in the text (tell me why you are doing the data cleaning activities that you perform) and follow a logical process.
+
+3.4 Once your data is clean, show what the final data set looks like. However, do not print more than 20 rows of your data to the screen; rather, show me the data in a condensed form (i.e. using enhanced print for tibbles, head/tail commands, etc).
+
+3.5 Provide summary information about the variables of concern in your cleaned data set. provide me with a consolidated explanation, either with a table that provides summary info for each variable or a nicely written summary paragraph with inline code.
+
+# Exploratory Data Analysis
+
+```{r}
+
+```
+
+```{r}
+annapuerna <- subset(exped_tidy,
+                     select = c(PEAKID, TOTMEMBERS, MDEATHS, NOHIRED),
+                     MDEATHS > 0 )
+
+annapuerna <- annapuerna |> select (PEAKID, MDEATHS, TOTMEMBERS, NOHIRED) |>  mutate(rate = MDEATHS/TOTMEMBERS)
+
+ggplot(annapuerna, aes(x = PEAKID, y = rate, fill = NOHIRED)) +
+  geom_col()
+```
+
+Which mountain range (HIMAL_FACTOR) has the highest average peak height (HEIGHTM)?
+
+```{r}
+slice_max(subset(peaks_tidy, select = c(HIMAL_FACTOR, HEIGHTM)), order_by = HEIGHTM)
+```
+
+The mountain ranges that most people climbed
+
+```{r}
+
+ggplot(peaks_tidy, aes(x = HIMAL_FACTOR, fill = PSTATUS_FACTOR)) +
+  geom_bar(position = "dodge")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(
+    x = "Mountain range") +
+  theme(legend.position = "top", legend) +
+  scale_fill_discrete(labels = c("Climbed", "Unclimbed"),
+                    name = "Climbing status")
+```

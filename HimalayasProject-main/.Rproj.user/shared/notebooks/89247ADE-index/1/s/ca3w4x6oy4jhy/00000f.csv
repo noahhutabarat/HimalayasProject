@@ -1,0 +1,3 @@
+"0","deathdf <- subset(exped_tidy, "
+"0","                  select = c(TOTMEMBERS, MDEATHS, NOHIRED), "
+"0","                  TOTMEMBERS >= MDEATHS )"
