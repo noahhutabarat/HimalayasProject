@@ -169,3 +169,5 @@ p2 <- ggplot(filtered_route_analysis, aes(x = reorder(route, -success_rate), y =
 ggplotly(p1)
 ggplotly(p2)
 ```
+
+While the route success is a higher percentage for Route 2, there is not enough sample data to say that it is a safer route compared to Route 1. There are only 43 attempts on Route 2 whereas there are 862 attempts on Route 1. Therefore, Route 1 would be the safest option as it has been attempted much more than the other routes, and it has a 72% success rate.
