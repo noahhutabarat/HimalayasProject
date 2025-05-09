@@ -65,6 +65,12 @@ summary(peaks_tidy)
 # Exploratory Data Analysis
 
 ```{r}
+slice_max(subset(peaks_tidy, select = c(himal_factor, heightm)), order_by = heightm, n = 3)
+```
+
+The top three highest peaks belong to the mountain range of Khumbu and Kangchenjunga, all reaching around 8500-9000 meters.
+
+```{r}
 annapuerna <- subset(exped_tidy,
                      select = c(peakid, totmembers, mdeaths, nohired),
                      mdeaths > 0 )
@@ -74,14 +80,6 @@ annapuerna <- annapuerna |> select (peakid, mdeaths, totmembers, nohired) |>  mu
 ggplot(annapuerna, aes(x = peakid, y = rate, fill = nohired)) +
   geom_col()
 ```
-
-Which mountain range (HIMAL_FACTOR) has the highest average peak height (HEIGHTM)?
-
-```{r}
-slice_max(subset(peaks_tidy, select = c(himal_factor, heightm)), order_by = heightm)
-```
-
-The mountain ranges that most people climbed
 
 ```{r}
 
@@ -176,6 +174,8 @@ While the route success is a higher percentage for Route 2, there is not enough 
 
 ## Survival Rate Associated with Hired Personnel
 
+We compared the survival rates of members of groups that had hired personnel to those that did not. The density graph shows that most groups hired personnel for the expedition and comparatively had a higher survival rate, as the red line (absence of hired personnel) starts to peak earlier, around a 90% survival rate.
+
 ```{r}
 deathdf <- subset(exped_tidy, 
                   select = c(totmembers, mdeaths, nohired), 
@@ -214,4 +214,30 @@ ggplot(peaks_tidy, aes(x = heightm, fill = open)) +
                      values = c("blue", "orange"),
                      name = "Open for expedition")
 
+```
+
+## Termination Reason
+
+```{r}
+termreason_setup <- exped_tidy |>
+  filter(termreason %in% c(4, 10)) |>
+  mutate(termreason_factor = recode(termreason_factor,
+      "Bad weather (storms, high winds)" = "Bad Weather",
+      "Route technically too difficult, lack of experience, strength, or motivation" = "Technical Difficulty"
+  )) |>
+  count(termreason_factor)
+termreason_setup
+```
+
+```{r}
+p3 <- ggplot(termreason_setup, aes(x = termreason_factor, y = n, fill = termreason_factor)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Term Reasons Count",
+    x = "Termination Reason",
+    y = "Count",
+    fill = "Termination Reason"
+  ) +
+  theme_minimal()
+ggplotly(p3)
 ```
