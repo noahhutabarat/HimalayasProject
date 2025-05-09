@@ -8,14 +8,6 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: packagesrequired.qmd
-        text: Packages Required
-      - href: datapreparation.qmd
-        text: Data Preparation
-      - href: dataanalysis.qmd
-        text: Data Analysis
-      - href: summary.qmd
-        text: Summary
 
 format:
   html:
