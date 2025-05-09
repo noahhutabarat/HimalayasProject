@@ -65,10 +65,6 @@ summary(peaks_tidy)
 # Exploratory Data Analysis
 
 ```{r}
-
-```
-
-```{r}
 annapuerna <- subset(exped_tidy,
                      select = c(peakid, totmembers, mdeaths, nohired),
                      mdeaths > 0 )
@@ -101,6 +97,8 @@ ggplot(peaks_tidy, aes(x = himal_factor, fill = pstatus_factor)) +
 
 ## Route Analysis
 
+There are four main routes for expedition in the Himalayas. This portion contains the optimal route for safety and success to reach the summit.
+
 ```{r}
 
 route_attempts <- exped_tidy |>
@@ -125,6 +123,8 @@ successes <- as.numeric(route_successes)
 
 ```
 
+We first find the number of attempts and successes for each route for the expedition.
+
 ```{r}
 route_analysis <- tibble(
   route = c("Route 1", "Route 2", "Route 3", "Route 4"),
@@ -136,9 +136,9 @@ route_analysis <- tibble(
 print(route_analysis)
 ```
 
--   **Route Omission**
+**Route Omission**
 
-    -   Since there are zero attempts for both Route 3 and Route 4, we have ommitted these from the analysis because there is no activity. This shows that these are not viable routes for expedition.
+Since there are zero attempts for both Route 3 and Route 4, we have ommitted these from the analysis because there is no activity. This shows that these are not viable routes for expedition.
 
 ```{r}
 filtered_route_analysis <- route_analysis |>
@@ -171,3 +171,47 @@ ggplotly(p2)
 ```
 
 While the route success is a higher percentage for Route 2, there is not enough sample data to say that it is a safer route compared to Route 1. There are only 43 attempts on Route 2 whereas there are 862 attempts on Route 1. Therefore, Route 1 would be the safest option as it has been attempted much more than the other routes, and it has a 72% success rate.
+
+**Route 1 is the most optimal route.**
+
+## Survival Rate Associated with Hired Personnel
+
+```{r}
+deathdf <- subset(exped_tidy, 
+                  select = c(totmembers, mdeaths, nohired), 
+                  totmembers >= mdeaths & totmembers != 0  )
+deathdf <- deathdf |> mutate(drate = 1 - (mdeaths/totmembers))
+
+ggplot(deathdf, aes(x = drate, color = nohired)) +
+  geom_density() + 
+  labs(
+    x = "Survival Rate") +
+  theme(legend.position = "top") +
+  scale_color_manual(labels = c("Present", "Absent"), 
+                     values = c("darkblue", "red"),
+                     name = "Hired Personnel")
+```
+
+```{r}
+ggplot(peaks_tidy, aes(x = himal_factor, fill = pstatus_factor)) +
+  geom_bar(position = "dodge")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(
+    x = "Mountain range") +
+  theme(legend.position = "top", legend) +
+  scale_fill_discrete(labels = c("Climbed", "Unclimbed"),
+                    name = "Climbing status")
+```
+
+```{r}
+ggplot(peaks_tidy, aes(x = heightm, fill = open)) +
+  geom_histogram(position = "dodge") +
+  labs(
+    #title = "Rate of death in relation to hired personnel",
+    x = "Height of peaks") +
+  theme(legend.position = "top") +
+  scale_color_manual(labels = c("CLOSED", "OPEN"), 
+                     values = c("blue", "orange"),
+                     name = "Open for expedition")
+
+```
