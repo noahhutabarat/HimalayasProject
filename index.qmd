@@ -218,6 +218,10 @@ ggplot(peaks_tidy, aes(x = heightm, fill = open)) +
 
 ## Termination Reason
 
+We look at the reason for terminating an expedition to get a better idea of the skill level and the reasoning for the difficulties of getting to your summit.
+
+First we clean up the data and create a table to find the reasoning for termination.
+
 ```{r}
 termreason_setup <- exped_tidy |>
   filter(termreason %in% c(4, 10)) |>
@@ -241,3 +245,5 @@ p3 <- ggplot(termreason_setup, aes(x = termreason_factor, y = n, fill = termreas
   theme_minimal()
 ggplotly(p3)
 ```
+
+We can see based on the table and graph that bad weather was the number one cause of termination with 78 instances. We can also see that technical difficulty being the reason for expedition termination was very low with 9 instances. We can can conclude that you have to be technically advanced to be able to go on the expedition. This can reduce the variables you have to worry about when climbing and make decisions on factors that are out of your control, such as weather.
