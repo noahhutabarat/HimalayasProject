@@ -195,16 +195,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>1.1 Provide an introduction that explains the problem statement you are addressing. Why should I be interested in this?</p>
-<p>The dataset we are analyzing is</p>
+<p>Our project acts as a guide for future explorers looking to take part in expeditions within the Himalayas. Our research is based on previous records of mountaineering data from the Himalayan Dataset. We wish to focus on available routes, the presence of hired personnel, the climbing status and success rates of various expeditions done in the past.</p>
 <p>1.2 Provide a short explanation of how you plan to address this problem statement (the data used and the methodology employed)</p>
+<p>The data used for this project was obtained through a Github repository - the original dataset is from the<a href="https://www.himalayandatabase.com/index.html">Himalayan Database</a>. This database covers data from expedition archives of a well known journalist, Elizabeth <a href="http://hawley.we">Hawley.</a> We plan on analyzing past data to provide tipds for future explorers on their journeys. We used R to carry out the data analysis and visualize our results.</p>
 <p>1.3 Discuss your current proposed approach/analytic technique you think will address (fully or partially) this problem.</p>
 <p>1.4 Explain how your analysis will help the consumer of your analysis</p>
 </section>
 <section id="packages-required" class="level1">
 <h1>Packages required</h1>
+<ul>
+<li><p>The following packages were used:</p>
+<ul>
+<li><p><code>ggplot2</code>: Used to create visualization of data through graphs</p></li>
+<li><p><code>tidyverse</code>: Used to mutate certain data to create new variables</p></li>
+<li><p><code>janitor</code>: Used to convert column names to snake case</p></li>
+<li><p><code>plotly</code> Used to create interactive plots</p></li>
+</ul></li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)  <span class="co"># visualization of data through graphs </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)  <span class="co"># i forgot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -216,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)  <span class="co"># tidy names</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'janitor'
@@ -225,7 +235,7 @@ The following objects are masked from 'package:stats':
 
     chisq.test, fisher.test</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)  <span class="co"># interactive plots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'plotly'
@@ -282,228 +292,102 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>peaks_tidy <span class="ot">&lt;-</span> peaks_tidy <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(exped_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    expid              peakid               year          season     
- Length:882         Length:882         Min.   :2020   Min.   :1.000  
- Class :character   Class :character   1st Qu.:2021   1st Qu.:1.000  
- Mode  :character   Mode  :character   Median :2022   Median :1.000  
-                                       Mean   :2022   Mean   :1.971  
-                                       3rd Qu.:2023   3rd Qu.:3.000  
-                                       Max.   :2024   Max.   :4.000  
-                                                                     
- season_factor           host       host_factor           route1         
- Length:882         Min.   :1.000   Length:882         Length:882        
- Class :character   1st Qu.:1.000   Class :character   Class :character  
- Mode  :character   Median :1.000   Mode  :character   Mode  :character  
-                    Mean   :1.033                                        
-                    3rd Qu.:1.000                                        
-                    Max.   :3.000                                        
-                                                                         
-    route2           route3         route4           nation         
- Length:882         Mode:logical   Mode:logical   Length:882        
- Class :character   NA's:882       NA's:882       Class :character  
- Mode  :character                                 Mode  :character  
-                                                                    
-                                                                    
-                                                                    
-                                                                    
-   leaders            sponsor           success1        success2      
- Length:882         Length:882         Mode :logical   Mode :logical  
- Class :character   Class :character   FALSE:258       FALSE:848      
- Mode  :character   Mode  :character   TRUE :624       TRUE :34       
-                                                                      
-                                                                      
-                                                                      
-                                                                      
-  success3        success4         ascent1            ascent2         
- Mode :logical   Mode :logical   Length:882         Length:882        
- FALSE:882       FALSE:882       Class :character   Class :character  
-                                 Mode  :character   Mode  :character  
-                                                                      
-                                                                      
-                                                                      
-                                                                      
- ascent3        ascent4         claimed         disputed      
- Mode:logical   Mode:logical   Mode :logical   Mode :logical  
- NA's:882       NA's:882       FALSE:882       FALSE:880      
-                                               TRUE :2        
-                                                              
-                                                              
-                                                              
-                                                              
-  countries           approach             bcdate          
- Length:882         Length:882         Min.   :2020-04-23  
- Class :character   Class :character   1st Qu.:2021-09-12  
- Mode  :character   Mode  :character   Median :2022-04-21  
-                                       Mean   :2022-06-17  
-                                       3rd Qu.:2023-04-17  
-                                       Max.   :2024-06-09  
-                                       NA's   :473         
-    smtdate             smttime             smtdays          totdays      
- Min.   :2020-05-26   Length:882         Min.   : 0.000   Min.   : 0.000  
- 1st Qu.:2021-11-16   Class :character   1st Qu.: 0.000   1st Qu.: 0.000  
- Median :2022-10-23   Mode  :character   Median : 0.000   Median : 0.000  
- Mean   :2022-10-27                      Mean   : 8.025   Mean   : 8.999  
- 3rd Qu.:2023-09-24                      3rd Qu.:13.000   3rd Qu.:16.750  
- Max.   :2024-06-12                      Max.   :70.000   Max.   :76.000  
- NA's   :87                                                               
-    termdate            termreason     termreason_factor    termnote        
- Min.   :2020-05-31   Min.   : 0.000   Length:882         Length:882        
- 1st Qu.:2021-10-01   1st Qu.: 1.000   Class :character   Class :character  
- Median :2022-05-17   Median : 1.000   Mode  :character   Mode  :character  
- Mean   :2022-06-30   Mean   : 2.221                                        
- 3rd Qu.:2023-05-14   3rd Qu.: 2.000                                        
- Max.   :2024-06-14   Max.   :14.000                                        
- NA's   :544                                                                
-   highpoint     traverse          ski          parapente      
- Min.   :   0   Mode :logical   Mode :logical   Mode :logical  
- 1st Qu.:6715   FALSE:873       FALSE:861       FALSE:882      
- Median :7176   TRUE :9         TRUE :21                       
- Mean   :6979                                                  
- 3rd Qu.:8516                                                  
- Max.   :8849                                                  
-                                                               
-     camps             rope           totmembers       smtmembers    
- Min.   : 0.000   Min.   :   0.00   Min.   : 0.000   Min.   : 0.000  
- 1st Qu.: 2.000   1st Qu.:   0.00   1st Qu.: 3.000   1st Qu.: 0.000  
- Median : 3.000   Median :   0.00   Median : 6.000   Median : 2.000  
- Mean   : 2.522   Mean   :  19.44   Mean   : 8.193   Mean   : 3.804  
- 3rd Qu.: 4.000   3rd Qu.:   0.00   3rd Qu.:11.000   3rd Qu.: 6.000  
- Max.   :13.000   Max.   :5200.00   Max.   :37.000   Max.   :31.000  
-                                                                     
-    mdeaths           tothired         smthired         hdeaths       
- Min.   :0.00000   Min.   : 0.000   Min.   : 0.000   Min.   :0.00000  
- 1st Qu.:0.00000   1st Qu.: 1.000   1st Qu.: 0.000   1st Qu.:0.00000  
- Median :0.00000   Median : 5.000   Median : 2.000   Median :0.00000  
- Mean   :0.04082   Mean   : 7.615   Mean   : 4.039   Mean   :0.01927  
- 3rd Qu.:0.00000   3rd Qu.:10.000   3rd Qu.: 6.000   3rd Qu.:0.00000  
- Max.   :4.00000   Max.   :58.000   Max.   :43.000   Max.   :3.00000  
-                                                                      
-  nohired          o2used          o2none         o2climb       
- Mode :logical   Mode :logical   Mode :logical   Mode :logical  
- FALSE:736       FALSE:473       FALSE:419       FALSE:476      
- TRUE :146       TRUE :409       TRUE :463       TRUE :406      
-                                                                
-                                                                
-                                                                
-                                                                
- o2descent        o2sleep        o2medical        o2taken       
- Mode :logical   Mode :logical   Mode :logical   Mode :logical  
- FALSE:871       FALSE:811       FALSE:874       FALSE:870      
- TRUE :11        TRUE :71        TRUE :8         TRUE :12       
-                                                                
-                                                                
-                                                                
-                                                                
-  o2unkwn         othersmts          campsites           routememo     
- Mode :logical   Length:882         Length:882         Min.   :  2195  
- FALSE:878       Class :character   Class :character   1st Qu.: 84473  
- TRUE :4         Mode  :character   Mode  :character   Median :165248  
-                                                       Mean   :146087  
-                                                       3rd Qu.:208643  
-                                                       Max.   :221852  
-                                                       NA's   :354     
-  accidents          achievment           agency            comrte       
- Length:882         Length:882         Length:882         Mode :logical  
- Class :character   Class :character   Class :character   FALSE:445      
- Mode  :character   Mode  :character   Mode  :character   TRUE :437      
-                                                                         
-                                                                         
-                                                                         
-                                                                         
-   stdrte         primrte         primmem         primref       
- Mode :logical   Mode :logical   Mode :logical   Mode :logical  
- FALSE:414       FALSE:870       FALSE:882       FALSE:821      
- TRUE :468       TRUE :12                        TRUE :61       
-                                                                
-                                                                
-                                                                
-                                                                
-    primid              chksum       
- Length:882         Min.   :   2022  
- Class :character   1st Qu.:2463313  
- Mode  :character   Median :2464488  
-                    Mean   :2213338  
-                    3rd Qu.:2464616  
-                    Max.   :2466848  
-                                     </code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>exped_tidy <span class="ot">&lt;-</span> exped_tidy[<span class="fu">c</span>(<span class="st">"success1"</span>, <span class="st">"success2"</span>, <span class="st">"success3"</span>, <span class="st">"success4"</span>, <span class="st">"route1"</span>, <span class="st">"route2"</span>, <span class="st">"route3"</span>, <span class="st">"route4"</span>, <span class="st">"termreason"</span>, <span class="st">"termreason_factor"</span>, <span class="st">"nohired"</span>, <span class="st">"mdeaths"</span>, <span class="st">"totmembers"</span>, <span class="st">"peakid"</span>)]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>peaks_tidy <span class="ot">&lt;-</span> peaks_tidy[<span class="fu">c</span>(<span class="st">"peakid"</span>, <span class="st">"pstatus_factor"</span>, <span class="st">"open"</span>, <span class="st">"heightm"</span>, <span class="st">"pkname"</span>, <span class="st">"himal_factor"</span>)]   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(peaks_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(exped_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    peakid             pkname            pkname2            location        
- Length:480         Length:480         Length:480         Length:480        
- Class :character   Class :character   Class :character   Class :character  
- Mode  :character   Mode  :character   Mode  :character   Mode  :character  
-                                                                            
-                                                                            
-                                                                            
-                                                                            
-    heightm        heightf          himal       himal_factor      
- Min.   :5407   Min.   :17740   Min.   : 1.00   Length:480        
- 1st Qu.:6235   1st Qu.:20456   1st Qu.: 6.00   Class :character  
- Median :6552   Median :21498   Median :11.00   Mode  :character  
- Mean   :6649   Mean   :21814   Mean   :10.25                     
- 3rd Qu.:6900   3rd Qu.:22640   3rd Qu.:15.00                     
- Max.   :8849   Max.   :29032   Max.   :20.00                     
-                                                                  
-     region      region_factor         open          unlisted      
- Min.   :1.000   Length:480         Mode :logical   Mode :logical  
- 1st Qu.:2.000   Class :character   FALSE:95        FALSE:415      
- Median :4.000   Mode  :character   TRUE :385       TRUE :65       
- Mean   :3.802                                                     
- 3rd Qu.:6.000                                                     
- Max.   :7.000                                                     
-                                                                   
-  trekking          trekyear      restrict             phost      
- Mode :logical   Min.   :  20   Length:480         Min.   :1.000  
- FALSE:449       1st Qu.:1978   Class :character   1st Qu.:1.000  
- TRUE :31        Median :1978   Mode  :character   Median :1.000  
-                 Mean   :1919                      Mean   :2.112  
-                 3rd Qu.:2002                      3rd Qu.:4.000  
-                 Max.   :2002                      Max.   :6.000  
-                 NA's   :451                                      
- phost_factor          pstatus      pstatus_factor        peakmemo     
- Length:480         Min.   :1.000   Length:480         Min.   :   8.0  
- Class :character   1st Qu.:2.000   Class :character   1st Qu.: 472.5  
- Mode  :character   Median :2.000   Mode  :character   Median : 865.0  
-                    Mean   :1.767                      Mean   : 791.3  
-                    3rd Qu.:2.000                      3rd Qu.:1115.0  
-                    Max.   :2.000                      Max.   :1377.0  
-                                                       NA's   :5       
-     pyear         pseason         pexpid            psmtdate        
- Min.   :1909   Min.   :0.000   Length:480         Length:480        
- 1st Qu.:1964   1st Qu.:1.000   Class :character   Class :character  
- Median :1984   Median :1.000   Mode  :character   Mode  :character  
- Mean   :1987   Mean   :1.581                                        
- 3rd Qu.:2011   3rd Qu.:3.000                                        
- Max.   :2024   Max.   :4.000                                        
- NA's   :118                                                         
-   pcountry          psummiters          psmtnote           refermemo    
- Length:480         Length:480         Length:480         Min.   : 25.0  
- Class :character   Class :character   Class :character   1st Qu.:170.5  
- Mode  :character   Mode  :character   Mode  :character   Median :304.0  
-                                                          Mean   :328.0  
-                                                          3rd Qu.:491.5  
-                                                          Max.   :701.0  
-                                                          NA's   :461    
-   photomemo    
- Min.   : 13.0  
- 1st Qu.:178.2  
- Median :376.5  
- Mean   :380.1  
- 3rd Qu.:552.8  
- Max.   :781.0  
- NA's   :402    </code></pre>
+<pre><code>  success1        success2        success3        success4      
+ Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+ FALSE:258       FALSE:848       FALSE:882       FALSE:882      
+ TRUE :624       TRUE :34                                       
+                                                                
+                                                                
+                                                                
+    route1             route2           route3         route4       
+ Length:882         Length:882         Mode:logical   Mode:logical  
+ Class :character   Class :character   NA's:882       NA's:882      
+ Mode  :character   Mode  :character                                
+                                                                    
+                                                                    
+                                                                    
+   termreason     termreason_factor   nohired           mdeaths       
+ Min.   : 0.000   Length:882         Mode :logical   Min.   :0.00000  
+ 1st Qu.: 1.000   Class :character   FALSE:736       1st Qu.:0.00000  
+ Median : 1.000   Mode  :character   TRUE :146       Median :0.00000  
+ Mean   : 2.221                                      Mean   :0.04082  
+ 3rd Qu.: 2.000                                      3rd Qu.:0.00000  
+ Max.   :14.000                                      Max.   :4.00000  
+   totmembers        peakid         
+ Min.   : 0.000   Length:882        
+ 1st Qu.: 3.000   Class :character  
+ Median : 6.000   Mode  :character  
+ Mean   : 8.193                     
+ 3rd Qu.:11.000                     
+ Max.   :37.000                     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(peaks_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    peakid          pstatus_factor        open            heightm    
+ Length:480         Length:480         Mode :logical   Min.   :5407  
+ Class :character   Class :character   FALSE:95        1st Qu.:6235  
+ Mode  :character   Mode  :character   TRUE :385       Median :6552  
+                                                       Mean   :6649  
+                                                       3rd Qu.:6900  
+                                                       Max.   :8849  
+    pkname          himal_factor      
+ Length:480         Length:480        
+ Class :character   Class :character  
+ Mode  :character   Mode  :character  
+                                      
+                                      
+                                      </code></pre>
 </div>
 </div>
 <p>3.4 Once your data is clean, show what the final data set looks like. However, do not print more than 20 rows of your data to the screen; rather, show me the data in a condensed form (i.e.&nbsp;using enhanced print for tibbles, head/tail commands, etc).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(exped_tidy, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 14
+   success1 success2 success3 success4 route1    route2 route3 route4 termreason
+   &lt;lgl&gt;    &lt;lgl&gt;    &lt;lgl&gt;    &lt;lgl&gt;    &lt;chr&gt;     &lt;chr&gt;  &lt;lgl&gt;  &lt;lgl&gt;       &lt;dbl&gt;
+ 1 TRUE     FALSE    FALSE    FALSE    N Col-NE… &lt;NA&gt;   NA     NA              1
+ 2 TRUE     FALSE    FALSE    FALSE    N Col-NE… &lt;NA&gt;   NA     NA              1
+ 3 TRUE     FALSE    FALSE    FALSE    N Col-NE… &lt;NA&gt;   NA     NA              1
+ 4 TRUE     FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA              1
+ 5 TRUE     FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA              1
+ 6 TRUE     FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA              1
+ 7 FALSE    FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA              4
+ 8 TRUE     FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA              1
+ 9 FALSE    FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA             12
+10 TRUE     FALSE    FALSE    FALSE    SW Ridge  &lt;NA&gt;   NA     NA              1
+# ℹ 5 more variables: termreason_factor &lt;chr&gt;, nohired &lt;lgl&gt;, mdeaths &lt;dbl&gt;,
+#   totmembers &lt;dbl&gt;, peakid &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(peaks_tidy, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+   peakid pstatus_factor open  heightm pkname             himal_factor       
+   &lt;chr&gt;  &lt;chr&gt;          &lt;lgl&gt;   &lt;dbl&gt; &lt;chr&gt;              &lt;chr&gt;              
+ 1 AMAD   Climbed        TRUE     6814 Ama Dablam         Khumbu             
+ 2 AMPG   Climbed        TRUE     5630 Amphu Gyabjen      Khumbu             
+ 3 ANN1   Climbed        TRUE     8091 Annapurna I        Annapurna          
+ 4 ANN2   Climbed        TRUE     7937 Annapurna II       Annapurna          
+ 5 ANN3   Climbed        TRUE     7555 Annapurna III      Annapurna          
+ 6 ANN4   Climbed        TRUE     7525 Annapurna IV       Annapurna          
+ 7 ANNE   Climbed        TRUE     8026 Annapurna I East   Annapurna          
+ 8 ANNM   Climbed        TRUE     8051 Annapurna I Middle Annapurna          
+ 9 ANNS   Climbed        TRUE     7219 Annapurna South    Annapurna          
+10 APIM   Climbed        TRUE     7132 Api Main           Api/Byas Risi/Guras</code></pre>
+</div>
+</div>
 <p>3.5 Provide summary information about the variables of concern in your cleaned data set. provide me with a consolidated explanation, either with a table that provides summary info for each variable or a nicely written summary paragraph with inline code.</p>
 </section>
 <section id="exploratory-data-analysis" class="level1">
 <h1>Exploratory Data Analysis</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">subset</span>(peaks_tidy, <span class="at">select =</span> <span class="fu">c</span>(himal_factor, heightm)), <span class="at">order_by =</span> heightm, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">subset</span>(peaks_tidy, <span class="at">select =</span> <span class="fu">c</span>(himal_factor, heightm)), <span class="at">order_by =</span> heightm, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   himal_factor            heightm
@@ -515,35 +399,35 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 </div>
 <p>The top three highest peaks belong to the mountain range of Khumbu and Kangchenjunga, all reaching around 8500-9000 meters.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> <span class="fu">subset</span>(exped_tidy,</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">select =</span> <span class="fu">c</span>(peakid, totmembers, mdeaths, nohired),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                     mdeaths <span class="sc">&gt;</span> <span class="dv">0</span> )</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> annapuerna <span class="sc">|&gt;</span> <span class="fu">select</span> (peakid, mdeaths, totmembers, nohired) <span class="sc">|&gt;</span>  <span class="fu">mutate</span>(<span class="at">rate =</span> mdeaths<span class="sc">/</span>totmembers)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(annapuerna, <span class="fu">aes</span>(<span class="at">x =</span> peakid, <span class="at">y =</span> rate, <span class="at">fill =</span> nohired)) <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> <span class="fu">subset</span>(exped_tidy,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">select =</span> <span class="fu">c</span>(peakid, totmembers, mdeaths, nohired),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                     mdeaths <span class="sc">&gt;</span> <span class="dv">0</span> )</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>annapuerna <span class="ot">&lt;-</span> annapuerna <span class="sc">|&gt;</span> <span class="fu">select</span> (peakid, mdeaths, totmembers, nohired) <span class="sc">|&gt;</span>  <span class="fu">mutate</span>(<span class="at">rate =</span> mdeaths<span class="sc">/</span>totmembers)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(annapuerna, <span class="fu">aes</span>(<span class="at">x =</span> peakid, <span class="at">y =</span> rate, <span class="at">fill =</span> nohired)) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> himal_factor, <span class="at">fill =</span> pstatus_factor)) <span class="sc">+</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)<span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mountain range"</span>) <span class="sc">+</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, legend) <span class="sc">+</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Climbed"</span>, <span class="st">"Unclimbed"</span>),</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Climbing status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> himal_factor, <span class="at">fill =</span> pstatus_factor)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)<span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mountain range"</span>) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, legend) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Climbed"</span>, <span class="st">"Unclimbed"</span>),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Climbing status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -552,35 +436,35 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 <h2 class="anchored" data-anchor-id="route-analysis">Route Analysis</h2>
 <p>There are four main routes for expedition in the Himalayas. This portion contains the optimal route for safety and success to reach the summit.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>route_attempts <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">route1_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route1)),</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">route2_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route2)),</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">route3_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route3)),</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">route4_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route4))</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>route_successes <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">success1_successes =</span> <span class="fu">sum</span>(success1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">success2_successes =</span> <span class="fu">sum</span>(success2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">success3_successes =</span> <span class="fu">sum</span>(success3, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">success4_successes =</span> <span class="fu">sum</span>(success4, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>attempts <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(route_attempts)</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>successes <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(route_successes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>route_attempts <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">route1_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route1)),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">route2_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route2)),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">route3_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route3)),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">route4_attempts =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(route4))</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>route_successes <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">success1_successes =</span> <span class="fu">sum</span>(success1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">success2_successes =</span> <span class="fu">sum</span>(success2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">success3_successes =</span> <span class="fu">sum</span>(success3, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">success4_successes =</span> <span class="fu">sum</span>(success4, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>attempts <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(route_attempts)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>successes <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(route_successes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We first find the number of attempts and successes for each route for the expedition.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>route_analysis <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">route =</span> <span class="fu">c</span>(<span class="st">"Route 1"</span>, <span class="st">"Route 2"</span>, <span class="st">"Route 3"</span>, <span class="st">"Route 4"</span>),</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">attempts =</span> attempts,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">successes =</span> successes</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">success_rate =</span> (successes <span class="sc">/</span> attempts) <span class="sc">*</span> <span class="dv">100</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(route_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>route_analysis <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">route =</span> <span class="fu">c</span>(<span class="st">"Route 1"</span>, <span class="st">"Route 2"</span>, <span class="st">"Route 3"</span>, <span class="st">"Route 4"</span>),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">attempts =</span> attempts,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">successes =</span> successes</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">success_rate =</span> (successes <span class="sc">/</span> attempts) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(route_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 4
   route   attempts successes success_rate
@@ -594,40 +478,40 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 <p><strong>Route Omission</strong></p>
 <p>Since there are zero attempts for both Route 3 and Route 4, we have ommitted these from the analysis because there is no activity. This shows that these are not viable routes for expedition.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>filtered_route_analysis <span class="ot">&lt;-</span> route_analysis <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(attempts <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Attempts vs Success</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(filtered_route_analysis, <span class="fu">aes</span>(<span class="at">x =</span> route)) <span class="sc">+</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> attempts, <span class="at">fill =</span> <span class="st">"Attempts"</span>), <span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> successes, <span class="at">fill =</span> <span class="st">"Successes"</span>), <span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Attempts vs. Successes for Route 1 and Route 2"</span>,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Route"</span>,</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Expeditions"</span>,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Legend"</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Success Rate</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(filtered_route_analysis, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(route, <span class="sc">-</span>success_rate), <span class="at">y =</span> success_rate, <span class="at">fill =</span> route)) <span class="sc">+</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Success Rates by Climbing Route"</span>,</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Route"</span>,</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Success Rate (%)"</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>filtered_route_analysis <span class="ot">&lt;-</span> route_analysis <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(attempts <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Attempts vs Success</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(filtered_route_analysis, <span class="fu">aes</span>(<span class="at">x =</span> route)) <span class="sc">+</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> attempts, <span class="at">fill =</span> <span class="st">"Attempts"</span>), <span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> successes, <span class="at">fill =</span> <span class="st">"Successes"</span>), <span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Attempts vs. Successes for Route 1 and Route 2"</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Route"</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Expeditions"</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Legend"</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Success Rate</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(filtered_route_analysis, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(route, <span class="sc">-</span>success_rate), <span class="at">y =</span> success_rate, <span class="at">fill =</span> route)) <span class="sc">+</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Success Rates by Climbing Route"</span>,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Route"</span>,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Success Rate (%)"</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-2a1044dfde755ece799c" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-2a1044dfde755ece799c">{"x":{"data":[{"orientation":"v","width":[0.39999999999999991,0.40000000000000013],"base":[0,0],"x":[1,2],"y":[862,43],"text":["route: Route 1<br />attempts: 862<br />fill: Attempts","route: Route 2<br />attempts:  43<br />fill: Attempts"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Attempts","legendgroup":"Attempts","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.39999999999999991,0.40000000000000013],"base":[0,0],"x":[1,2],"y":[624,34],"text":["route: Route 1<br />successes: 624<br />fill: Successes","route: Route 2<br />successes:  34<br />fill: Successes"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Successes","legendgroup":"Successes","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":43.105022831050235},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Attempts vs. Successes for Route 1 and Route 2","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,2.6000000000000001],"tickmode":"array","ticktext":["Route 1","Route 2"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Route 1","Route 2"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Route","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-43.100000000000001,905.10000000000002],"tickmode":"array","ticktext":["0","250","500","750"],"tickvals":[0,250.00000000000003,500,750],"categoryorder":"array","categoryarray":["0","250","500","750"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Number of Expeditions","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Legend","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"13dd930a099ea":{"x":{},"y":{},"fill":{},"type":"bar"},"13dd97fd8ea96":{"x":{},"y":{},"fill":{}}},"cur_data":"13dd930a099ea","visdat":{"13dd930a099ea":["function (y) ","x"],"13dd97fd8ea96":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-bfcb023ef28466f1939a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-bfcb023ef28466f1939a">{"x":{"data":[{"orientation":"v","width":[0.39999999999999991,0.40000000000000013],"base":[0,0],"x":[1,2],"y":[862,43],"text":["route: Route 1<br />attempts: 862<br />fill: Attempts","route: Route 2<br />attempts:  43<br />fill: Attempts"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Attempts","legendgroup":"Attempts","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.39999999999999991,0.40000000000000013],"base":[0,0],"x":[1,2],"y":[624,34],"text":["route: Route 1<br />successes: 624<br />fill: Successes","route: Route 2<br />successes:  34<br />fill: Successes"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Successes","legendgroup":"Successes","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":43.105022831050235},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Attempts vs. Successes for Route 1 and Route 2","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,2.6000000000000001],"tickmode":"array","ticktext":["Route 1","Route 2"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Route 1","Route 2"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Route","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-43.100000000000001,905.10000000000002],"tickmode":"array","ticktext":["0","250","500","750"],"tickvals":[0,250.00000000000003,500,750],"categoryorder":"array","categoryarray":["0","250","500","750"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Number of Expeditions","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Legend","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"14131508360bb":{"x":{},"y":{},"fill":{},"type":"bar"},"141316143be48":{"x":{},"y":{},"fill":{}}},"cur_data":"14131508360bb","visdat":{"14131508360bb":["function (y) ","x"],"141316143be48":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-909532bbd01bf74f3d25" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-909532bbd01bf74f3d25">{"x":{"data":[{"orientation":"v","width":0.90000000000000013,"base":0,"x":[2],"y":[72.389791183294662],"text":"reorder(route, -success_rate): Route 1<br />success_rate: 72.38979<br />route: Route 1","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Route 1","legendgroup":"Route 1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.89999999999999991,"base":0,"x":[1],"y":[79.069767441860463],"text":"reorder(route, -success_rate): Route 2<br />success_rate: 79.06977<br />route: Route 2","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Route 2","legendgroup":"Route 2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Success Rates by Climbing Route","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,2.6000000000000001],"tickmode":"array","ticktext":["Route 2","Route 1"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Route 2","Route 1"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Route","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.9534883720930232,83.023255813953483],"tickmode":"array","ticktext":["0","20","40","60","80"],"tickvals":[0,20,40,60,80],"categoryorder":"array","categoryarray":["0","20","40","60","80"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Success Rate (%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"route","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"13dd96e4fc5da":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"13dd96e4fc5da","visdat":{"13dd96e4fc5da":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-34bd47ea41dcc6516518" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-34bd47ea41dcc6516518">{"x":{"data":[{"orientation":"v","width":0.90000000000000013,"base":0,"x":[2],"y":[72.389791183294662],"text":"reorder(route, -success_rate): Route 1<br />success_rate: 72.38979<br />route: Route 1","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Route 1","legendgroup":"Route 1","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.89999999999999991,"base":0,"x":[1],"y":[79.069767441860463],"text":"reorder(route, -success_rate): Route 2<br />success_rate: 79.06977<br />route: Route 2","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Route 2","legendgroup":"Route 2","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Success Rates by Climbing Route","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,2.6000000000000001],"tickmode":"array","ticktext":["Route 2","Route 1"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Route 2","Route 1"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Route","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.9534883720930232,83.023255813953483],"tickmode":"array","ticktext":["0","20","40","60","80"],"tickvals":[0,20,40,60,80],"categoryorder":"array","categoryarray":["0","20","40","60","80"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Success Rate (%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"route","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"14131453b0bf0":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"14131453b0bf0","visdat":{"14131453b0bf0":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>While the route success is a higher percentage for Route 2, there is not enough sample data to say that it is a safer route compared to Route 1. There are only 43 attempts on Route 2 whereas there are 862 attempts on Route 1. Therefore, Route 1 would be the safest option as it has been attempted much more than the other routes, and it has a 72% success rate.</p>
@@ -637,61 +521,61 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 <h2 class="anchored" data-anchor-id="survival-rate-associated-with-hired-personnel">Survival Rate Associated with Hired Personnel</h2>
 <p>We compared the survival rates of members of groups that had hired personnel to those that did not. The density graph shows that most groups hired personnel for the expedition and comparatively had a higher survival rate, as the red line (absence of hired personnel) starts to peak earlier, around a 90% survival rate.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>deathdf <span class="ot">&lt;-</span> <span class="fu">subset</span>(exped_tidy, </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">select =</span> <span class="fu">c</span>(totmembers, mdeaths, nohired), </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                  totmembers <span class="sc">&gt;=</span> mdeaths <span class="sc">&amp;</span> totmembers <span class="sc">!=</span> <span class="dv">0</span>  )</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>deathdf <span class="ot">&lt;-</span> deathdf <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">drate =</span> <span class="dv">1</span> <span class="sc">-</span> (mdeaths<span class="sc">/</span>totmembers))</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(deathdf, <span class="fu">aes</span>(<span class="at">x =</span> drate, <span class="at">color =</span> nohired)) <span class="sc">+</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Survival Rate"</span>) <span class="sc">+</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Present"</span>, <span class="st">"Absent"</span>), </span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"darkblue"</span>, <span class="st">"red"</span>),</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">"Hired Personnel"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>deathdf <span class="ot">&lt;-</span> <span class="fu">subset</span>(exped_tidy, </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">select =</span> <span class="fu">c</span>(totmembers, mdeaths, nohired), </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                  totmembers <span class="sc">&gt;=</span> mdeaths <span class="sc">&amp;</span> totmembers <span class="sc">!=</span> <span class="dv">0</span>  )</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>deathdf <span class="ot">&lt;-</span> deathdf <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">drate =</span> <span class="dv">1</span> <span class="sc">-</span> (mdeaths<span class="sc">/</span>totmembers))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(deathdf, <span class="fu">aes</span>(<span class="at">x =</span> drate, <span class="at">color =</span> nohired)) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Survival Rate"</span>) <span class="sc">+</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Present"</span>, <span class="st">"Absent"</span>), </span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"darkblue"</span>, <span class="st">"red"</span>),</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">"Hired Personnel"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> himal_factor, <span class="at">fill =</span> pstatus_factor)) <span class="sc">+</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)<span class="sc">+</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mountain range"</span>) <span class="sc">+</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, legend) <span class="sc">+</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Climbed"</span>, <span class="st">"Unclimbed"</span>),</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Climbing status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> himal_factor, <span class="at">fill =</span> pstatus_factor)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)<span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mountain range"</span>) <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, legend) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Climbed"</span>, <span class="st">"Unclimbed"</span>),</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Climbing status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> heightm, <span class="at">fill =</span> open)) <span class="sc">+</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#title = "Rate of death in relation to hired personnel",</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Height of peaks"</span>) <span class="sc">+</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"CLOSED"</span>, <span class="st">"OPEN"</span>), </span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"orange"</span>),</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">"Open for expedition"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peaks_tidy, <span class="fu">aes</span>(<span class="at">x =</span> heightm, <span class="at">fill =</span> open)) <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#title = "Rate of death in relation to hired personnel",</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Height of peaks"</span>) <span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"CLOSED"</span>, <span class="st">"OPEN"</span>), </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"orange"</span>),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">name =</span> <span class="st">"Open for expedition"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -702,14 +586,14 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 <p>We look at the reason for terminating an expedition to get a better idea of the skill level and the reasoning for the difficulties of getting to your summit.</p>
 <p>First we clean up the data and create a table to find the reasoning for termination.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>termreason_setup <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(termreason <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">termreason_factor =</span> <span class="fu">recode</span>(termreason_factor,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bad weather (storms, high winds)"</span> <span class="ot">=</span> <span class="st">"Bad Weather"</span>,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Route technically too difficult, lack of experience, strength, or motivation"</span> <span class="ot">=</span> <span class="st">"Technical Difficulty"</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(termreason_factor)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>termreason_setup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>termreason_setup <span class="ot">&lt;-</span> exped_tidy <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(termreason <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">termreason_factor =</span> <span class="fu">recode</span>(termreason_factor,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bad weather (storms, high winds)"</span> <span class="ot">=</span> <span class="st">"Bad Weather"</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Route technically too difficult, lack of experience, strength, or motivation"</span> <span class="ot">=</span> <span class="st">"Technical Difficulty"</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(termreason_factor)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>termreason_setup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   termreason_factor        n
@@ -719,19 +603,19 @@ lgl  (3): OPEN, UNLISTED, TREKKING
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(termreason_setup, <span class="fu">aes</span>(<span class="at">x =</span> termreason_factor, <span class="at">y =</span> n, <span class="at">fill =</span> termreason_factor)) <span class="sc">+</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Term Reasons Count"</span>,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Termination Reason"</span>,</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Termination Reason"</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(termreason_setup, <span class="fu">aes</span>(<span class="at">x =</span> termreason_factor, <span class="at">y =</span> n, <span class="at">fill =</span> termreason_factor)) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Term Reasons Count"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Termination Reason"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Termination Reason"</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-6b59c2de1cf7d78f024e" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-6b59c2de1cf7d78f024e">{"x":{"data":[{"orientation":"v","width":0.89999999999999991,"base":0,"x":[1],"y":[78],"text":"termreason_factor: Bad Weather<br />n: 78<br />termreason_factor: Bad Weather","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Bad Weather","legendgroup":"Bad Weather","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.90000000000000013,"base":0,"x":[2],"y":[9],"text":"termreason_factor: Technical Difficulty<br />n:  9<br />termreason_factor: Technical Difficulty","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Technical Difficulty","legendgroup":"Technical Difficulty","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Term Reasons Count","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,2.6000000000000001],"tickmode":"array","ticktext":["Bad Weather","Technical Difficulty"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Bad Weather","Technical Difficulty"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Termination Reason","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.9000000000000004,81.900000000000006],"tickmode":"array","ticktext":["0","20","40","60","80"],"tickvals":[4.4408920985006262e-16,20,40,60.000000000000007,80],"categoryorder":"array","categoryarray":["0","20","40","60","80"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Count","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Termination Reason","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"13dd96f65cd02":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"13dd96f65cd02","visdat":{"13dd96f65cd02":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-753fc838693fe914a6ec" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-753fc838693fe914a6ec">{"x":{"data":[{"orientation":"v","width":0.89999999999999991,"base":0,"x":[1],"y":[78],"text":"termreason_factor: Bad Weather<br />n: 78<br />termreason_factor: Bad Weather","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Bad Weather","legendgroup":"Bad Weather","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":0.90000000000000013,"base":0,"x":[2],"y":[9],"text":"termreason_factor: Technical Difficulty<br />n:  9<br />termreason_factor: Technical Difficulty","type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Technical Difficulty","legendgroup":"Technical Difficulty","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Term Reasons Count","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,2.6000000000000001],"tickmode":"array","ticktext":["Bad Weather","Technical Difficulty"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Bad Weather","Technical Difficulty"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Termination Reason","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.9000000000000004,81.900000000000006],"tickmode":"array","ticktext":["0","20","40","60","80"],"tickvals":[4.4408920985006262e-16,20,40,60.000000000000007,80],"categoryorder":"array","categoryarray":["0","20","40","60","80"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Count","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Termination Reason","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1413172d8a411":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"1413172d8a411","visdat":{"1413172d8a411":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>We can see based on the table and graph that bad weather was the number one cause of termination with 78 instances. We can also see that technical difficulty being the reason for expedition termination was very low with 9 instances. We can can conclude that you have to be technically advanced to be able to go on the expedition. This can reduce the variables you have to worry about when climbing and make decisions on factors that are out of your control, such as weather.</p>
